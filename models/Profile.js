@@ -35,65 +35,69 @@ const profileSchema = new Schema({
   githubUser: {
     type: String
   },
-  experience [
-      {
-          title: {
-            type: String, 
-            required: true
-          },
-          company: {
-            type: String, 
-            required: true
-          },
-          location: {
-            type: String
-          },
-          from: {
-            type: Date,
-            required: true
-          },
-          to: {
-            type: Date,
-          },
-          current: {
-            type: Boolean,
-            default: false
-          },
-          description: {
-            type: String,
-          }
+  experience: [
+    {
+      title: {
+        type: String,
+        required: true
+      },
+      company: {
+        type: String,
+        required: true
+      },
+      location: {
+        type: String
+      },
+      from: {
+        type: Date,
+        required: true
+      },
+      to: {
+        type: Date
+      },
+      current: {
+        type: Boolean,
+        default: false
+      },
+      description: {
+        type: String
       }
+    }
   ],
-  education [
-        {
-            school: {
-            type: String, 
-            required: true
-            },
-            degree: {
-            type: String, 
-            required: true
-            },
-            fieldOfStudy: {
-            type: String,
-            required: true
-            },
-            from: {
-            type: Date,
-            required: true
-            },
-            to: {
-            type: Date,
-            },
-            current: {
-            type: Boolean,
-            default: false
-            },
-            description: {
-            type: String,
-            }
-        }
-    ]
+  education: [
+    {
+      school: {
+        type: String,
+        required: true
+      },
+      degree: {
+        type: String,
+        required: true
+      },
+      fieldOfStudy: {
+        type: String,
+        required: true
+      },
+      from: {
+        type: Date,
+        required: true
+      },
+      to: {
+        type: Date
+      },
+      current: {
+        type: Boolean,
+        default: false
+      },
+      description: {
+        type: String
+      }
+    }
+  ],
+  date: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-module.exports = User = mongoose.model("users", userSchema);
+module.exports = Profile = mongoose.model("profile", profileSchema);

@@ -33,6 +33,8 @@ app.use("/api/profile", profile);
 app.use("/api/posts", posts);
 
 app.get("/", (req, res) => res.send("hello world"));
+app.get("/test", (req, res) => res.sendFile(__dirname + "/index.html"));
+
 app.listen(port, () =>
   console.log(`Server running on http://localhost:${port}`)
 );
