@@ -5,22 +5,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>SocialStream</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <style>
+        #fb-btn {
+            margin-top: 8px;
+            margin-left: 10px;
+        }
+
+        #profile,
+        #feed {
+            display: none
+        }
+
+        #logout {
+            color: white;
+            display: none
+        }
+
+        img {
+            width: 100px
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Test hello</h1>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">SocialStream</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-    </fb:login-button>
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <fb:login-button id="fb-btn" scope="manage_pages,publish_pages" onlogin="checkLoginState();">
+                    </fb:login-button>
+                </li>
+            </ul>
+            <ul class="my-2 my-lg-0">
+                <li>
+                    <a id="logout" href="#" onclick="logout()">Log out</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h3 id="heading">Login to view your profile</h3>
+        <div id="profile"></div>
+        <div class="my-5" id="feed"></div>
+    </div>
+
+    <section class="container">
+        <input type="text" name="message" id="input">
+        <button type="button" onclick="postMessgePost()">Send Post</button>
+    </section>
 
     <script>
+        const pageAccessToken = 'EAACEdEose0cBAG5eqSTJU8RlSrhIDyZChUBCZC1964PZBUeZBhBxtJBxdBikfRdGvbESoBwSAUkLt4zdYZAL70vTyh1VIJuBN5ZAKyMKJ0LNrZCcXZCxssdDg3kUoJ7S01xP4S2GONbCo0cwI3L6QwQPNbH5dlPjRaRZBuZBZAzefm60yhuJZADrOdyinZB9Gok2PjldabvOEZBDAE3AZDZD'
+        const pageID = '632946920387713'
         window.fbAsyncInit = function () {
             FB.init({
-                appId: '{459969514451091}',
+                appId: '459969514451091',
                 cookie: true,
                 xfbml: true,
-                version: 'v2.8'
+                version: 'v3.0'
             });
             FB.getLoginStatus(function (response) {
                 statusChangeCallback(response);
@@ -38,8 +94,11 @@
         function statusChangeCallback(response) {
             if (response.status === 'connected') {
                 console.log('Logged in and authenticated');
+                setElements(true)
+                testAPI()
             } else {
                 console.log('Not Authenticated');
+                setElements(false)
             }
         }
 
@@ -48,7 +107,112 @@
                 statusChangeCallback(response);
             });
         }
+        function testAPI() {
+            FB.api(`/${pageID}/published_posts`, 'GET', { "access_token": pageAccessToken, "fields": "full_picture,message,created_time" },
+                function (response) {
+                    console.log(response);
+                    buildFeed(response);
+                }
+            );
+
+        }
+
+        function postMessgePost() {
+            // TEXT POST
+            var input = document.querySelector('#input').value
+            FB.api(`/${pageID}/feed`, 'POST', { "access_token": pageAccessToken, "message": `${input}` },
+                function (response) {
+                    console.log(response);
+                }
+            );
+        }
+        function postImagePost() {
+            // IMAGE POST
+            var input = document.querySelector('#input').value
+            FB.api(`/${pageID}/photos`, 'POST', { "access_token": pageAccessToken, "url": "https://scontent-atl3-1.xx.fbcdn.net/v/t1.0-1/p200x200/34511516_632947013721037_1934238023537393664_n.png?_nc_cat=0&oh=2797c9f6a9fbbca9812cfc867e6be15a&oe=5BB6A58F", "caption": `${input}` },
+                function (response) {
+                    console.log(response);
+                }
+            );
+        }
+
+        function deletePost(postID) {
+            FB.api(`/${postID}`, "DELETE", { "access_token": pageAccessToken }, function (response) {
+                if (response && !response.error) {
+                    console.log(`Deleted Post: ${postID}`)
+                }
+            }
+            );
+            document.querySelector(`#data_${postID}`).style.display = 'none'
+        }
+
+
+        function timeAgo(time) {
+            var date = new Date((time || "")),
+                diff = (((new Date()).getTime() - date.getTime()) / 1000),
+                day_diff = Math.floor(diff / 86400);
+
+            if (isNaN(day_diff) || day_diff < 0 || day_diff >= 31)
+                return;
+
+            return day_diff == 0 && (
+                diff < 60 && "just now" ||
+                diff < 120 && "1 minute ago" ||
+                diff < 3600 && Math.floor(diff / 60) + " minutes ago" ||
+                diff < 7200 && "1 hour ago" ||
+                diff < 86400 && Math.floor(diff / 3600) + " hours ago") ||
+                day_diff == 1 && "Yesterday" ||
+                day_diff < 7 && day_diff + " days ago" ||
+                day_diff < 31 && Math.ceil(day_diff / 7) + " weeks ago";
+        }
+
+        function buildFeed(feed) {
+            let output = '<h3>Latest Post</h3>'
+            for (let i in feed.data) {
+                var time = timeAgo(feed.data[i].created_time);
+                var image = feed.data[i].full_picture;
+                var postID = feed.data[i].id;
+
+                if (feed.data[i].message) {
+                    output += `
+                        <div class="well" id="data_${postID}">
+                            ${feed.data[i].message}: <span>${time}</span>
+                            <img src="${image}" alt=""/>
+                            <button type='button' onClick='deletePost("${postID}")'>Delete</button>
+                        </div>
+                    `
+                }
+            }
+            document.querySelector('#feed').innerHTML = output
+        }
+
+        function setElements(isLoggedIn) {
+            if (isLoggedIn) {
+                document.querySelector('#feed').style.display = 'block';
+                document.querySelector('#logout').style.display = 'block';
+                document.querySelector('#profile').style.display = 'block';
+                document.querySelector('#fb-btn').style.display = 'none'
+                document.querySelector('#heading').style.display = 'none'
+            } else {
+                document.querySelector('#feed').style.display = 'none';
+                document.querySelector('#logout').style.display = 'none';
+                document.querySelector('#profile').style.display = 'none';
+                document.querySelector('#fb-btn').style.display = 'block'
+                document.querySelector('#heading').style.display = 'block'
+            }
+        }
+
+        function logout() {
+            FB.logout(function (response) {
+                setElements(false)
+            })
+        }
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
 
 </body>
 
