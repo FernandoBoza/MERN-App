@@ -64,12 +64,15 @@
     </div>
 
     <section class="container">
-        <input type="text" name="message" id="input">
-        <button type="button" onclick="postMessgePost()">Send Post</button>
+        <input id="input" type="text" name="message" placeholder="message">
+        <input id="dbLink" type="text" name="img" placeholder="Dropbox Link">
+        <button type="button" onclick="postMessgePost()">MESSAGE BUTTON</button>
     </section>
 
+
     <script>
-        const pageAccessToken = 'EAACEdEose0cBAG5eqSTJU8RlSrhIDyZChUBCZC1964PZBUeZBhBxtJBxdBikfRdGvbESoBwSAUkLt4zdYZAL70vTyh1VIJuBN5ZAKyMKJ0LNrZCcXZCxssdDg3kUoJ7S01xP4S2GONbCo0cwI3L6QwQPNbH5dlPjRaRZBuZBZAzefm60yhuJZADrOdyinZB9Gok2PjldabvOEZBDAE3AZDZD'
+
+        const pageAccessToken = 'EAACEdEose0cBAJaVG0NiJFVtuOoo9tIMsXe1HttpuDyjFoXIr7UE2BWZB1XJ3iiw0m1jxTfeP7zmjc68e51nzIzwZBabEmkJeF0HlMKvGqCTe7K22WMZBrkmb483gmHS721BZBFylWtC4L74EElFJA81dTBiTt33acOhFMA9n5ih0tpmS0oXUqhG7qZAnZBgMMCbKcgSoRkgZDZD'
         const pageID = '632946920387713'
         window.fbAsyncInit = function () {
             FB.init({
@@ -118,20 +121,19 @@
         }
 
         function postMessgePost() {
-            // TEXT POST
             var input = document.querySelector('#input').value
-            FB.api(`/${pageID}/feed`, 'POST', { "access_token": pageAccessToken, "message": `${input}` },
+            FB.api(`/${pageID}/feed`, 'POST', { "access_token": pageAccessToken, 'published': false, "message": `${input}`, 'scheduled_publish_time': '2018-06-06T23:44:34+000' },
                 function (response) {
                     console.log(response);
                 }
             );
         }
         function postImagePost() {
-            // IMAGE POST
             var input = document.querySelector('#input').value
-            FB.api(`/${pageID}/photos`, 'POST', { "access_token": pageAccessToken, "url": "https://scontent-atl3-1.xx.fbcdn.net/v/t1.0-1/p200x200/34511516_632947013721037_1934238023537393664_n.png?_nc_cat=0&oh=2797c9f6a9fbbca9812cfc867e6be15a&oe=5BB6A58F", "caption": `${input}` },
+            var imgLink = document.querySelector('#dbLink')
+            FB.api(`/${pageID}/photos`, 'POST', { "access_token": pageAccessToken, "url": imgLink.value, "caption": `${input}` },
                 function (response) {
-                    console.log(response);
+                    testAPI()
                 }
             );
         }
