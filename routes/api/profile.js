@@ -34,7 +34,7 @@ router.get(
   }
 );
 
-// @Route GET api/profile/a;;
+// @Route GET api/profile/a;
 // @Desc GET all profile
 // @Access Public
 router.get("/all", (req, res) => {
@@ -108,18 +108,17 @@ router.post(
     const profileFields = {};
     profileFields.user = req.user.id;
     if (req.body.handle) profileFields.handle = req.body.handle;
-    if (req.body.company) profileFields.company = req.body.company;
-    if (req.body.website) profileFields.website = req.body.website;
-    if (req.body.location) profileFields.location = req.body.location;
-    if (req.body.bio) profileFields.bio = req.body.bio;
-    if (req.body.status) profileFields.status = req.body.status;
-    if (req.body.githubUser) profileFields.githubUser = req.body.githubUser;
-    if (req.body.githubUser) profileFields.githubUser = req.body.githubUser;
+    // if (req.body.company) profileFields.company = req.body.company;
+    // if (req.body.website) profileFields.website = req.body.website;
+    // if (req.body.location) profileFields.location = req.body.location;
+    // if (req.body.bio) profileFields.bio = req.body.bio;
+    // if (req.body.status) profileFields.status = req.body.status;
+    // if (req.body.githubUser) profileFields.githubUser = req.body.githubUser;
 
     // Skills - Split into Array
-    if (typeof req.body.skills !== undefined) {
-      profileFields.skills = req.body.skills.split(",");
-    }
+    // if (typeof req.body.skills !== undefined) {
+    //   profileFields.skills = req.body.skills.split(",");
+    // }
 
     Profile.findOne({ user: req.user.id }).then(profile => {
       if (profile) {
@@ -146,115 +145,115 @@ router.post(
   }
 );
 
-// @Route POST api/profile/experience
-// @Desc Add experience to profile
-// @Access Private
-router.post(
-  "/experience",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { errors, isValid } = validateExperienceInput(req.body);
-    // Check Validation
-    if (!isValid) {
-      // Return any errors with 400
-      return res.status(400).json(errors);
-    }
+// // @Route POST api/profile/experience
+// // @Desc Add experience to profile
+// // @Access Private
+// router.post(
+//   "/experience",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     const { errors, isValid } = validateExperienceInput(req.body);
+//     // Check Validation
+//     if (!isValid) {
+//       // Return any errors with 400
+//       return res.status(400).json(errors);
+//     }
 
-    Profile.findOne({ user: req.user.id }).then(profile => {
-      const newExp = {
-        title: req.body.title,
-        company: req.body.company,
-        location: req.body.location,
-        from: req.body.from,
-        to: req.body.to,
-        current: req.body.current,
-        description: req.body.description
-      };
+//     Profile.findOne({ user: req.user.id }).then(profile => {
+//       const newExp = {
+//         title: req.body.title,
+//         company: req.body.company,
+//         location: req.body.location,
+//         from: req.body.from,
+//         to: req.body.to,
+//         current: req.body.current,
+//         description: req.body.description
+//       };
 
-      // Add to experience Array
-      profile.experience.unshift(newExp);
-      profile.save().then(profile => res.json(profile));
-    });
-  }
-);
+//       // Add to experience Array
+//       profile.experience.unshift(newExp);
+//       profile.save().then(profile => res.json(profile));
+//     });
+//   }
+// );
 
-// @Route POST api/profile/education
-// @Desc Add education to profile
-// @Access Private
-router.post(
-  "/education",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { errors, isValid } = validateEducationInput(req.body);
-    // Check Validation
-    if (!isValid) {
-      // Return any errors with 400
-      return res.status(400).json(errors);
-    }
+// // @Route POST api/profile/education
+// // @Desc Add education to profile
+// // @Access Private
+// router.post(
+//   "/education",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     const { errors, isValid } = validateEducationInput(req.body);
+//     // Check Validation
+//     if (!isValid) {
+//       // Return any errors with 400
+//       return res.status(400).json(errors);
+//     }
 
-    Profile.findOne({ user: req.user.id }).then(profile => {
-      const newEdu = {
-        school: req.body.school,
-        degree: req.body.degree,
-        fieldOfStudy: req.body.fieldOfStudy,
-        from: req.body.from,
-        to: req.body.to,
-        current: req.body.current,
-        description: req.body.description
-      };
+//     Profile.findOne({ user: req.user.id }).then(profile => {
+//       const newEdu = {
+//         school: req.body.school,
+//         degree: req.body.degree,
+//         fieldOfStudy: req.body.fieldOfStudy,
+//         from: req.body.from,
+//         to: req.body.to,
+//         current: req.body.current,
+//         description: req.body.description
+//       };
 
-      // Add to education Array
-      profile.education.unshift(newEdu);
-      profile.save().then(profile => res.json(profile));
-    });
-  }
-);
+//       // Add to education Array
+//       profile.education.unshift(newEdu);
+//       profile.save().then(profile => res.json(profile));
+//     });
+//   }
+// );
 
-// @Route DELETE api/profile/experience/:exp_id
-// @Desc Delete experience to profile
-// @Access Private
-router.delete(
-  "/experience/:exp_id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Profile.findOne({ user: req.user.id })
-      .then(profile => {
-        // GET remove index
-        const removeIndex = profile.experience
-          .map(item => item.id)
-          .indexOf(req.params.exp_id);
+// // @Route DELETE api/profile/experience/:exp_id
+// // @Desc Delete experience to profile
+// // @Access Private
+// router.delete(
+//   "/experience/:exp_id",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     Profile.findOne({ user: req.user.id })
+//       .then(profile => {
+//         // GET remove index
+//         const removeIndex = profile.experience
+//           .map(item => item.id)
+//           .indexOf(req.params.exp_id);
 
-        //Splice out of array
-        profile.experience.splice(removeIndex, 1);
+//         //Splice out of array
+//         profile.experience.splice(removeIndex, 1);
 
-        profile.save().then(profile => res.json(profile));
-      })
-      .catch(err => res.status(404).json(err));
-  }
-);
+//         profile.save().then(profile => res.json(profile));
+//       })
+//       .catch(err => res.status(404).json(err));
+//   }
+// );
 
-// @Route DELETE api/profile/education/:edu_id
-// @Desc Delete education to profile
-// @Access Private
-router.delete(
-  "/education/:edu_id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Profile.findOne({ user: req.user.id })
-      .then(profile => {
-        // GET remove index
-        const removeIndex = profile.education
-          .map(item => item.id)
-          .indexOf(req.params.edu_id);
+// // @Route DELETE api/profile/education/:edu_id
+// // @Desc Delete education to profile
+// // @Access Private
+// router.delete(
+//   "/education/:edu_id",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     Profile.findOne({ user: req.user.id })
+//       .then(profile => {
+//         // GET remove index
+//         const removeIndex = profile.education
+//           .map(item => item.id)
+//           .indexOf(req.params.edu_id);
 
-        //Splice out of array
-        profile.education.splice(removeIndex, 1);
+//         //Splice out of array
+//         profile.education.splice(removeIndex, 1);
 
-        profile.save().then(profile => res.json(profile));
-      })
-      .catch(err => res.status(404).json(err));
-  }
-);
+//         profile.save().then(profile => res.json(profile));
+//       })
+//       .catch(err => res.status(404).json(err));
+//   }
+// );
 
 // @Route DELETE api/profile
 // @Desc Delete user and profile

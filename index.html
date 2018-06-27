@@ -65,14 +65,14 @@
 
     <section class="container">
         <input id="input" type="text" name="message" placeholder="message">
-        <input id="dbLink" type="text" name="img" placeholder="Dropbox Link">
+        <!-- <input id="dbLink" type="text" name="img" placeholder="Dropbox Link"> -->
         <button type="button" onclick="postMessgePost()">MESSAGE BUTTON</button>
     </section>
 
 
     <script>
 
-        const pageAccessToken = 'EAACEdEose0cBAJaVG0NiJFVtuOoo9tIMsXe1HttpuDyjFoXIr7UE2BWZB1XJ3iiw0m1jxTfeP7zmjc68e51nzIzwZBabEmkJeF0HlMKvGqCTe7K22WMZBrkmb483gmHS721BZBFylWtC4L74EElFJA81dTBiTt33acOhFMA9n5ih0tpmS0oXUqhG7qZAnZBgMMCbKcgSoRkgZDZD'
+        const pageAccessToken = 'EAACEdEose0cBAA9OC0IAal9OjTuBr89R1u4D3T5oPNSZBpXCWxjEEX0rWcqOkMc0fwd3zzvRVnVaPZBNJrxZCIUz9ZBUfATfoIsZCOZCbfI2CWQdGhwuUvW2Ug8asXibtUev3sNYRwBb3bY4kK6HujNqvpfWqecUavJZBZC3iyoOJ1adKXTtxxnyKX3NsU5KulyiBvH1UPLXaAZDZD'
         const pageID = '632946920387713'
         window.fbAsyncInit = function () {
             FB.init({
@@ -122,7 +122,7 @@
 
         function postMessgePost() {
             var input = document.querySelector('#input').value
-            FB.api(`/${pageID}/feed`, 'POST', { "access_token": pageAccessToken, 'published': false, "message": `${input}`, 'scheduled_publish_time': '2018-06-06T23:44:34+000' },
+            FB.api(`/${pageID}/feed`, 'POST', { "access_token": pageAccessToken, "message": `${input}` },
                 function (response) {
                     console.log(response);
                 }
