@@ -11,8 +11,8 @@ export default class Register extends Component {
       errors: {}
     };
 
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   onChange = e => {
@@ -26,14 +26,14 @@ export default class Register extends Component {
           <div className="col-sm-12">
             <div className="text-center">
               <h1 className="mt-5 mb-3 display-4">Register Below</h1>
-              <form className="form-signin" onSubmit={this.onSubmit}>
+              <form className="form-signin" onSubmit={this.handleSubmit}>
                 <input
                   type="name"
                   name="name"
                   className="form-control"
                   placeholder="Name"
                   value={this.state.name}
-                  onChange={this.onChange}
+                  onChange={this.handleChange}
                 />
                 <input
                   type="email"
@@ -41,7 +41,7 @@ export default class Register extends Component {
                   className="form-control"
                   placeholder="Email address"
                   value={this.state.email}
-                  onChange={this.onChange}
+                  onChange={this.handleChange}
                 />
                 <input
                   type="password"
@@ -49,7 +49,7 @@ export default class Register extends Component {
                   className="form-control"
                   placeholder="Password"
                   value={this.state.password}
-                  onChange={this.onChange}
+                  onChange={this.handleChange}
                 />
                 <input
                   type="password"
@@ -58,11 +58,11 @@ export default class Register extends Component {
                   className="form-control"
                   placeholder="Confirm Password"
                   value={this.state.password2}
-                  onChange={this.onChange}
+                  onChange={this.handleChange}
                 />
                 <button
                   className="btn btn-lg btn-primary btn-block"
-                  type="submit"
+                  //   type="submit"
                 >
                   Sign Up
                 </button>
