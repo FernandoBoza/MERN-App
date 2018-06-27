@@ -15,8 +15,20 @@ export default class Register extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  onChange = e => {
+  handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+  };
+  handleSubmit = e => {
+    e.preventDefault();
+
+    const newUser = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      password2: this.state.password2
+    };
+
+    console.log(newUser);
   };
 
   render() {
@@ -62,7 +74,7 @@ export default class Register extends Component {
                 />
                 <button
                   className="btn btn-lg btn-primary btn-block"
-                  //   type="submit"
+                  type="submit"
                 >
                   Sign Up
                 </button>
