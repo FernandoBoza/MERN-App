@@ -1,6 +1,10 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import classnames from "classnames";
+import { connect } from "react-redux";
+import { registerUser } from "../../actions/authActions";
 
-export default class Register extends Component {
+class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,6 +19,12 @@ export default class Register extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentWillReceiveProps = nextProps => {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  };
+
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -28,52 +38,84 @@ export default class Register extends Component {
       password2: this.state.password2
     };
 
-    console.log(newUser);
+    this.props.registerUser(newUser);
   };
 
   render() {
+    const { errors } = this.state;
     return (
       <div className="registerComponent container">
         <div className="row">
           <div className="col-sm-12">
             <div className="text-center">
-              <h1 className="mt-5 mb-3 display-4">Register Below</h1>
-              <form className="form-signin" onSubmit={this.handleSubmit}>
+              <h1 className="mt-5 mb-3 header">Sign Up</h1>
+              <form
+                noValidate
+                className="form-signin"
+                onSubmit={this.handleSubmit}
+              >
                 <input
                   type="name"
                   name="name"
-                  className="form-control"
+                  className={classnames("form-control", {
+                    "is-invalid": errors.name
+                  })}
                   placeholder="Name"
                   value={this.state.name}
                   onChange={this.handleChange}
                 />
+                {errors.name && (
+                  <div className="invalid-feedback text-left">
+                    {errors.name}
+                  </div>
+                )}
                 <input
                   type="email"
                   name="email"
-                  className="form-control"
+                  className={classnames("form-control", {
+                    "is-invalid": errors.email
+                  })}
                   placeholder="Email address"
                   value={this.state.email}
                   onChange={this.handleChange}
                 />
+                {errors.email && (
+                  <div className="invalid-feedback text-left">
+                    {errors.email}
+                  </div>
+                )}
                 <input
                   type="password"
                   name="password"
-                  className="form-control"
+                  className={classnames("form-control", {
+                    "is-invalid": errors.password
+                  })}
                   placeholder="Password"
                   value={this.state.password}
                   onChange={this.handleChange}
                 />
+                {errors.password && (
+                  <div className="invalid-feedback text-left">
+                    {errors.password}
+                  </div>
+                )}
                 <input
                   type="password"
                   name="password2"
-                  id="inputPasswordConfirm"
-                  className="form-control"
+                  className={classnames("form-control", {
+                    "is-invalid": errors.password2
+                  })}
                   placeholder="Confirm Password"
                   value={this.state.password2}
                   onChange={this.handleChange}
                 />
+                {errors.password2 && (
+                  <div className="invalid-feedback text-left">
+                    {errors.password2}
+                  </div>
+                )}
                 <button
-                  className="btn btn-lg btn-primary btn-block"
+                  className="btn btn-lg btn-outline-primary btn-block mt-3"
                   type="submit"
                 >
                   Sign Up
@@ -86,3 +128,19 @@ export default class Register extends Component {
     );
   }
 }
+
+Register.propTypes = {
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { registerUser }
+)(Register);
